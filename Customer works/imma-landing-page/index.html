@@ -31,6 +31,91 @@
             100% { background-position: 0% 50%; }
         }
 
+        /* Cookie Banner Styles */
+        #cookieBanner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #2c5aa0;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.3);
+        }
+        #cookieBanner.show {
+            display: block;
+        }
+        .cookie-buttons {
+            margin-top: 15px;
+        }
+        .cookie-btn {
+            background: #fff;
+            color: #2c5aa0;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .cookie-btn:hover {
+            background: #f0f0f0;
+        }
+        .cookie-btn.reject {
+            background: transparent;
+            color: white;
+            border: 1px solid white;
+        }
+        .cookie-btn.reject:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Footer Styles */
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 40px 0;
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-links a {
+            color: #dda15e;
+            text-decoration: none;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+            text-shadow: 0 0 10px rgba(221, 161, 94, 0.8);
+        }
+
+        .footer-info {
+            font-size: 0.9em;
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
         .container {
             max-width: 900px;
             margin: 0 auto;
@@ -526,6 +611,15 @@
                 grid-template-columns: 1fr;
                 gap: 20px;
             }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .footer {
+                padding: 30px 0;
+            }
         }
     </style>
 </head>
@@ -690,6 +784,37 @@
         </div>
     </div>
 
+    <!-- Footer with Legal Links -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="legal-pages/politica-privacidad.html">Política de Privacidad</a>
+                <a href="legal-pages/terminos-uso.html">Términos de Uso</a>
+                <a href="legal-pages/politica-cookies.html">Política de Cookies</a>
+                <a href="legal-pages/terminos-compra.html">Términos de Compra</a>
+                <a href="legal-pages/aviso-legal.html">Aviso Legal</a>
+            </div>
+            <div class="footer-info">
+                <p>&copy; 2025 InnerProyect. Todos los derechos reservados.</p>
+                <p>Contacto: contacto@innerproyect.com</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cookie Consent Banner -->
+    <div id="cookieBanner">
+        <div>
+            <strong>🍪 Utilizamos cookies para mejorar tu experiencia</strong><br>
+            Este sitio utiliza cookies para personalizar contenido, mostrar anuncios relevantes y analizar el tráfico. 
+            Al continuar navegando, aceptas nuestro uso de cookies.
+            <a href="legal-pages/politica-cookies.html" style="color: #ffeb3b;">Ver Política de Cookies</a>
+        </div>
+        <div class="cookie-buttons">
+            <button class="cookie-btn" onclick="acceptCookies()">Aceptar todas</button>
+            <button class="cookie-btn reject" onclick="rejectCookies()">Solo esenciales</button>
+        </div>
+    </div>
+
     <script>
         function joinWhatsApp() {
             // Enlace real al grupo de WhatsApp de Imma
@@ -702,6 +827,54 @@
                 behavior: 'smooth',
                 block: 'center'
             });
+        }
+
+        // Cookie Consent System
+        function showCookieBanner() {
+            const banner = document.getElementById('cookieBanner');
+            const consent = localStorage.getItem('cookieConsent');
+            
+            if (!consent) {
+                banner.classList.add('show');
+            }
+        }
+
+        function acceptCookies() {
+            localStorage.setItem('cookieConsent', 'accepted');
+            document.getElementById('cookieBanner').classList.remove('show');
+            
+            // Enable analytics and marketing cookies
+            if (typeof gtag !== 'undefined') {
+                gtag('consent', 'update', {
+                    'analytics_storage': 'granted',
+                    'ad_storage': 'granted'
+                });
+            }
+        }
+
+        function rejectCookies() {
+            localStorage.setItem('cookieConsent', 'essential-only');
+            document.getElementById('cookieBanner').classList.remove('show');
+            
+            // Keep only essential cookies
+            if (typeof gtag !== 'undefined') {
+                gtag('consent', 'update', {
+                    'analytics_storage': 'denied',
+                    'ad_storage': 'denied'
+                });
+            }
+        }
+
+        // Show banner when page loads
+        window.addEventListener('load', showCookieBanner);
+
+        // Google Analytics with Consent
+        if (localStorage.getItem('cookieConsent') === 'accepted') {
+            // Initialize Google Analytics
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'GA_MEASUREMENT_ID');
         }
 
         // Animación de aparición de elementos al hacer scroll
