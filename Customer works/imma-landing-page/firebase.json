@@ -1,0 +1,22 @@
+{
+  "hosting": [
+    {
+      "site": "imma-landing-page",
+      "public": "public",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    },
+    {
+      "site": "innerproyect-custom", 
+      "public": "public",
+      "ignore": [
+        "firebase.json",
+        "**/.*", 
+        "**/node_modules/**"
+      ]
+    }
+  ]
+}
